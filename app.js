@@ -7,22 +7,13 @@
 const express = require('express');
 const mysql   = require('mysql2/promise');
 const path    = require('path');
-const API = 'https://blood-donation-backend.onrender.com';
 
 const app  = express();
 const PORT = 5000;
 
 // ── Middleware ───────────────────────────────────────────────
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());  
-// Add this right after app.use(express.json())
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
-  next();
-});  
+app.use(express.json());
 
 // ── Serve static files from /public ─────────────────────────
 // index.html lives at public/index.html and is served automatically at /
@@ -30,14 +21,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Database Pool ────────────────────────────────────────────
 const pool = mysql.createPool({
-    host:     process.env.MYSQLHOST     || 'localhost',
-    user:     process.env.MYSQLUSER     || 'root',
-    password: process.env.MYSQLPASSWORD || 'mysql123',
-    database: process.env.MYSQLDATABASE || 'blood_donation',
-    port:     process.env.MYSQLPORT     || 3306,
+    host:               'localhost',
+    user:               'root',
+    password:           'mysql123',   // change if your password differs
+    database:           'blood_donation',
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit:    10,
 });
+
 // Verify DB connection on startup
 pool.getConnection()
     .then(conn => { console.log('✅ MySQL connected'); conn.release(); })
