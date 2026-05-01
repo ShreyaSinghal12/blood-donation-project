@@ -21,12 +21,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Database Pool ────────────────────────────────────────────
 const pool = mysql.createPool({
-    host:               'localhost',
-    user:               'root',
-    password:           'mysql123',   // change if your password differs
-    database:           'blood_donation',
-    waitForConnections: true,
-    connectionLimit:    10,
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT,
 });
 
 // Verify DB connection on startup
