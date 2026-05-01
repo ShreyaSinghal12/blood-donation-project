@@ -101,9 +101,6 @@ app.get('/all_donors', async (req, res) => {
     }
 });
 
-app.get('/', (req, res) => {
-  res.send('Backend is running 🚀');
-});
 
 // DELETE /delete_donor/:id
 app.delete('/delete_donor/:id', async (req, res) => {
