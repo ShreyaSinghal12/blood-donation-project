@@ -7,6 +7,7 @@
 const express = require('express');
 const mysql   = require('mysql2/promise');
 const path    = require('path');
+const API = 'https://blood-donation-backend.onrender.com';
 
 const app  = express();
 const PORT = 5000;
