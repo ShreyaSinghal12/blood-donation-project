@@ -1441,7 +1441,7 @@
 
     // ── Load stats ────────────────────────────────────────────────
     function loadStats() {
-      fetch('/stats')
+      fetch(API+'/stats')
         .then(r => { if (!r.ok) throw 0; return r.json(); })
         .then(d => {
           document.getElementById('st-total').textContent = d.total_donors;
@@ -1473,7 +1473,7 @@
       if (!bg || !city) { alert('Please select a blood group and enter a city.'); return; }
       const out = document.getElementById('search-out');
       out.innerHTML = '<div class="empty"><p>Searching…</p></div>';
-      fetch(`/search?blood_group=${encodeURIComponent(bg)}&city=${encodeURIComponent(city)}`)
+      fetch(API+`/search?blood_group=${encodeURIComponent(bg)}&city=${encodeURIComponent(city)}`)
         .then(r => { if (!r.ok) throw 0; return r.json(); })
         .then(data => {
           if (!data.length) {
@@ -1508,7 +1508,7 @@
       const date = document.getElementById('r-date').value;
       if (!name || !bg || !city || !phone || !date) { flash('reg-alert', '⚠️ Please fill in all required fields.', 'error'); return; }
       if (!/^\d{10}$/.test(phone)) { flash('reg-alert', '⚠️ Phone must be exactly 10 digits.', 'error'); return; }
-      fetch('/add_donor', {
+      fetch(API+'/add_donor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ name, blood_group: bg, city, phone, last_donation: date })
@@ -1527,7 +1527,7 @@
       const urgency = document.getElementById('em-urgency').value;
       if (!name || !bg || !city || !phone) { flash('em-alert', '⚠️ Please fill in all required fields.', 'error'); return; }
       if (!/^\d{10}$/.test(phone)) { flash('em-alert', '⚠️ Phone must be exactly 10 digits.', 'error'); return; }
-      fetch('/emergency', {
+      fetch(API+'/emergency', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ patient_name: name, blood_group: bg, city, phone, urgency })
@@ -1540,7 +1540,7 @@
     // ── Admin: donors ─────────────────────────────────────────────
     function loadDonors() {
       document.getElementById('adm-donors').innerHTML = '<div class="empty"><p>Loading…</p></div>';
-      fetch('/all_donors').then(r => r.json()).then(data => {
+      fetch(API+'/all_donors').then(r => r.json()).then(data => {
         if (!data.length) { document.getElementById('adm-donors').innerHTML = '<div class="empty"><p>No donors yet.</p></div>'; return; }
         const rows = data.map(d => `
       <tr>
@@ -1558,13 +1558,13 @@
 
     function delDonor(id) {
       if (!confirm('Delete this donor?')) return;
-      fetch(`/delete_donor/${id}`, { method: 'DELETE' }).then(r => r.json()).then(d => { alert(d.message); if (d.status === 'success') loadDonors(); });
+      fetch(API+`/delete_donor/${id}`, { method: 'DELETE' }).then(r => r.json()).then(d => { alert(d.message); if (d.status === 'success') loadDonors(); });
     }
 
     // ── Admin: requests ───────────────────────────────────────────
     function loadRequests() {
       document.getElementById('adm-reqs').innerHTML = '<div class="empty"><p>Loading…</p></div>';
-      fetch('/all_requests').then(r => r.json()).then(data => {
+      fetch(API+'/all_requests').then(r => r.json()).then(data => {
         if (!data.length) { document.getElementById('adm-reqs').innerHTML = '<div class="empty"><p>No requests yet.</p></div>'; return; }
         const uc = { Normal: 'badge-ok', Urgent: 'badge-warn', Critical: 'badge-crit' };
         const rows = data.map(r => `
